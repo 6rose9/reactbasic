@@ -1,4 +1,6 @@
-import { useState, useRef } from "react";
+import { useState, useRef, createContext, useContext } from "react";
+
+//----------------------------------------------- React Basic
 
 // child component
 function Item(props) {
@@ -50,6 +52,8 @@ function Item(props) {
 //     </div>
 //   );
 // }
+
+//----------------------------------------------- React Data Flow
 
 function AddForm(props) {
   const nameRef = useRef();
@@ -104,17 +108,22 @@ function AddForm(props) {
 //   )
 // }
 
-function Title(props) {
-  return <h1>{props.name}</h1>;
-}
+//----------------------------------------------- props Waterfall
 
-function Header(props) {
-  return <Title name={props.name} />;
-}
+// function Title(props) {
+//   return <h1>{props.name}</h1>;
+// }
+
+// function Header(props) {
+//   return <Title name={props.name} />;
+// }
 
 // export default function App(){
 //   return <Header name={"App Title"} />;
 // }
+
+//----------------------------------------------- React Component Style
+
 
 function Toolbar(props) {
   return (
@@ -124,20 +133,69 @@ function Toolbar(props) {
   )
 }
 
-export default function Add() {
+// export default function Add() {
+//   return (
+//     <div>
+//       <Toolbar>
+//         <h1>Hello React</h1>
+//         <h2>Component Composition</h2>
+//       </Toolbar>
+//     </div>
+//   );
+// }
+
+//----------------------------------------------- React Context
+
+// const MyContext = createContext();
+
+// export default function App() {
+//   return (
+//     <MyContext.Provider value="Hello Context">
+//       <Header />
+//     </MyContext.Provider>
+//   )
+// }
+
+// function Header(props) {
+//   return <Title />;
+// }
+
+// function Title(props) {
+//   const value = useContext(MyContext);
+//   return <h1>{value}</h1>
+// }
+const ThemeContext = createContext();
+
+export default function App() {
+  const [theme, setTheme] = useState("light");
   return (
-    <div>
-      <Toolbar>
-        <h1>Hello React</h1>
-        <h2>Component Composition</h2>
-      </Toolbar>
-    </div>
-  );
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      <div style={{
+        minHeight: 400,
+        color: "green",
+        padding: 20,
+        background: theme === "light" ? "lightblue" : "darkblue",
+      }}>
+        <Header />
+      </div>
+    </ThemeContext.Provider>
+  )
 }
 
+function Header(props) {
+  return <Title />;
+}
 
-
-
-
-
-
+function Title() {
+  const { theme, setTheme } = useContext(ThemeContext);
+  return (
+    <div>
+      <h1>Hello Context</h1>
+      <button onClick={() => {
+        setTheme(
+          theme === "light" ? "dark" : "light"
+        )
+      }}>Toggle Theme</button>
+    </div>
+  )
+}
